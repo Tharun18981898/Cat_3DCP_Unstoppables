@@ -9,52 +9,60 @@ const NextPage = () => {
   const [isAvailableNow, setIsAvailableNow] = useState(false);
   const [isCertified, setIsCertified] = useState(false);
   const [services, setServices] = useState({
-    construction: false,
-    renovation: false,
+    constructor: false,
+    renovator: false,
   });
   
-  // Toggle service selection
   const toggleService = (service) => {
     setServices((prevServices) => ({
       ...prevServices,
       [service]: !prevServices[service],
     }));
   };
+  
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Implement your search functionality here
-    console.log({
-      searchRadius,
-      sortBy,
-      isAvailableNow,
-      isCertified,
-      services,
+  
+    const serviceTypes = [];
+    if (services.constructor) serviceTypes.push('Constructor');
+    if (services.renovator) serviceTypes.push('Renovator');
+  
+    // Construct a string for the query parameter, like "Constructor,Renovator"
+    const serviceTypeQueryParam = serviceTypes.join(',');
+  
+    const queryParams = new URLSearchParams({
+      // ...other params
+      serviceType: serviceTypeQueryParam
     });
-    navigate('/contractors-results'); // <-- Use the navigate function here
+  
+    navigate(`/contractors-results?${queryParams}`);
   };
+  
 
   return (
     <div className="next-page-container">
       <form onSubmit={handleSubmit} className="filter-form">
-        <h1>Find Farmhouse Contractors</h1>
+        <h1>Find Office Contractors</h1>
 
         <div className="service-options">
           <label>
             <input
               type="checkbox"
-              checked={services.construction}
-              onChange={() => toggleService('construction')}
-            />
-            Construction
+              name="serviceType"
+              checked={services.constructor}
+              onChange={() => toggleService('constructor')} // change to 'constructor' 
+              />
+            Constructor
           </label>
           <label>
             <input
               type="checkbox"
-              checked={services.renovation}
-              onChange={() => toggleService('renovation')}
+              name="serviceType"
+              checked={services.renovator}
+              onChange={() => toggleService('renovator')} // change to 'renovator'
             />
-            Renovation
+            Renovator
           </label>
         </div>
         
@@ -93,7 +101,7 @@ const NextPage = () => {
             checked={isCertified}
             onChange={() => setIsCertified(!isCertified)}
           />
-          Certified Contractors Only
+          Rating Above 4
         </label>
 
         <button type="submit" className="search-button">

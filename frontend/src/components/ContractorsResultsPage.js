@@ -1,24 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import './ContractorsResultsPage.css';
-import { useLocation } from 'react-router-dom'; // <-- Import useLocation
-
+import { useNavigate } from 'react-router-dom';
 
 const ContractorsResultsPage = () => {
-  const [contractors, setContractors] = useState([]);
+  const [companies, setCompanies] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  const getImageForContractor = (name) => {
-    const images = {
-      'L&T Pvt Limited': '/L&T.jpg',
-      'Precision Planning': '/PP.jpg',
-      'SC2': '/SC2.jpg',
-      'Caterpillar': '/caterpillar-logo.png',
-    };
-    return process.env.PUBLIC_URL + (images[name] || '/default-logo.png');
-  };
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchContractors = async () => {
+    const fetchCompanies = async () => {
       setIsLoading(true);
       try {
         const response = await fetch('http://localhost:3001/api/companies');
@@ -26,56 +16,70 @@ const ContractorsResultsPage = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        console.log(data);
-        setContractors(data);
+        setCompanies(data);
       } catch (error) {
-        console.error('Failed to fetch contractors:', error);
+        console.error('Failed to fetch companies:', error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchContractors();
+    fetchCompanies();
   }, []);
 
-  const displayYesNo = (value) => {
-    if (typeof value === 'boolean') {
-      return value ? 'Yes' : 'No';
-    } else if (typeof value === 'string') {
-      // Assuming the string is either "Yes" or "No"
-      return value;
-    }
-  };
+
+    // Function definitions
+    const handleBookAppointmentClick = (companyId) => {
+      navigate(`/book-appointment/${companyId}`);
+    };
+  
+    const handleGetEstimateClick = (companyId) => {
+      // Replace this with the actual path you wish to navigate to
+      navigate(`/get-estimate/${companyId}`);
+    };
+  
+    const handleGetInTouchClick = (companyId) => {
+      // Replace this with the actual path you wish to navigate to
+      navigate(`/get-in-touch/${companyId}`);
+    };
 
   return (
-    <div className="contractors-results-page">
-      <h1>Contractors Results</h1>
+    <div className="companies-results-page">
+      <h1>Companies Results</h1>
       {isLoading ? (
         <p>Loading...</p>
-      ) : contractors.length > 0 ? (
-        contractors.map((contractor) => (
-          <div key={contractor._id} className="contractor-card">
+      ) : companies.length > 0 ? (
+        companies.map((company) => (
+          <div key={company._id} className="company-card">
             <img
-              src={getImageForContractor(contractor.name)}
-              alt={contractor.name}
-              style={{ width: '250px', height: 'auto' }}
+              src={company.seller_picture}
+              alt={company.seller_name}
+              className="company-card-img"
             />
-            <h2>{contractor.name}</h2>
-            <p>Type: {contractor.type}</p>
-            <p>Location: {contractor.location}</p>
-            <p>Pincode: {contractor.pincode}</p>
-            <p>Available: {contractor.available}</p> {/* Directly display 'Yes' or 'No' */}
-            <p>Certified: {contractor.certified}</p>
-            <p>Rating: {contractor.rating}</p>
-            <p>Virtual Consultations: {contractor.virtualConsultations}</p>
+            <div className="company-details">
+              <h2>{company.seller_name}</h2>
+              <p>Website: <a href={company.seller_website}>{company.seller_website}</a></p>
+              <p>Email: {company.seller_email}</p>
+              <p>Phone: {company.seller_phonenumber}</p>
+              <p>Address: {company.seller_address}</p>
+              <p>Pincode: {company.pincode}</p>
+              <p>Summary: {company.seller_summary}</p>
+              <p>Partners: {company.seller_partners.join(', ')}</p>
+              <p>Type: {company.usertype}</p>
+              <p>Rating: {company.rating}</p>
+            </div>
+            <div className="company-actions">
+              <button className="btn" onClick={() => handleBookAppointmentClick(company._id)}>Book Appointment</button>
+              <button className="btn" onClick={() => handleGetEstimateClick(company._id)}>Get Estimate</button>
+              <button className="btn" onClick={() => handleGetInTouchClick(company._id)}>Get In touch</button>
+            </div>
           </div>
         ))
       ) : (
-        <p>No contractors found.</p>
+        <p>No companies found.</p>
       )}
     </div>
   );
 };
 
 export default ContractorsResultsPage;
-

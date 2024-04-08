@@ -3,10 +3,15 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const Company = require('./models/Company'); // Make sure the path matches your file structure
+const GetInTouch = require('./models/GetInTouch'); // Ensure this model is created
+
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000'
+}));
+
 app.use(express.json());
 
 // Connect to MongoDB
@@ -17,18 +22,47 @@ mongoose.connect(process.env.MONGODB_URI, {
 .then(() => console.log('MongoDB connection established'))
 .catch(err => console.error('MongoDB connection error:', err));
 
-// API route to get all companies
+app.post('/api/get-in-touch', async (req, res) => {
+  try {
+    const newContact = new GetInTouch({
+      fullName: req.body.fullName,
+      email: req.body.email,
+      message: req.body.message
+    });
+    await newContact.save();
+    res.status(201).json({ message: 'Contact info saved' });
+  } catch (error) {
+    console.error('Error saving contact info:', error);
+    res.status(500).json({ message: 'Error saving contact info' });
+  }
+});
+
+
 app.get('/api/companies', async (req, res) => {
   try {
-    const companies = await Company.find({});
-    console.log(companies); // This will print the data in your backend console
+    const { searchRadius, sortBy, isAvailableNow, isCertified, serviceType } = req.query;
+
+    // Create a MongoDB query object
+    const query = {};
+    
+    // Filter by service type if specified
+    if (serviceType) {
+      query.usertype = serviceType; // Ensure this matches exactly with the database
+    }
+    // Additional filters...
+
+    // Fetch the filtered data from the database
+    const companies = await Company.find(query);
+    
+    // Respond with the filtered companies
     res.json(companies);
   } catch (error) {
+    console.error('Error fetching companies:', error);
     res.status(500).send(error);
   }
 });
 
-// Start the server
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
