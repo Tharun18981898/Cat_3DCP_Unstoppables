@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './GetInTouchPage.css'; // Ensure this file is in the same directory
+import './GetInTouchPage.css'; // Make sure this file exists and is in the correct directory
 
 function GetInTouchPage() {
   const [contactDetails, setContactDetails] = useState({
@@ -7,6 +7,8 @@ function GetInTouchPage() {
     email: '',
     message: ''
   });
+  
+  const [statusMessage, setStatusMessage] = useState('');
 
   const handleChange = (e) => {
     setContactDetails({ ...contactDetails, [e.target.name]: e.target.value });
@@ -14,14 +16,36 @@ function GetInTouchPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here, you would send the contactDetails to your backend server
-    console.log('Contact details submitted: ', contactDetails);
-    // You might want to clear the form, show a success message, etc.
-    setContactDetails({
-      fullName: '',
-      email: '',
-      message: ''
-    });
+    setStatusMessage(''); // Clear status message on new submission
+    try {
+      const response = await fetch('http://localhost:3001/api/get-in-touch', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(contactDetails),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      console.log(data.message); // "Contact info saved"
+      
+      // Show a success message and clear the form
+      setStatusMessage('Your message has been sent successfully.');
+      setContactDetails({
+        fullName: '',
+        email: '',
+        message: ''
+      });
+
+    } catch (error) {
+      // Handle errors here, such as showing a notification to the user
+      console.error('Error submitting contact info:', error);
+      setStatusMessage('Failed to send message. Please try again later.');
+    }
   };
 
   return (

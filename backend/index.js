@@ -22,6 +22,18 @@ mongoose.connect(process.env.MONGODB_URI, {
 .then(() => console.log('MongoDB connection established'))
 .catch(err => console.error('MongoDB connection error:', err));
 
+
+app.get('/api/get-in-touch', async (req, res) => {
+  try {
+    // Assuming your GetInTouch model represents documents in a collection where contact information is stored
+    const contacts = await GetInTouch.find({});
+    res.status(200).json(contacts);
+  } catch (error) {
+    console.error('Error fetching contacts:', error);
+    res.status(500).json({ message: 'Error fetching contacts' });
+  }
+});
+
 app.post('/api/get-in-touch', async (req, res) => {
   try {
     const newContact = new GetInTouch({
@@ -42,19 +54,17 @@ app.get('/api/companies', async (req, res) => {
   try {
     const { searchRadius, sortBy, isAvailableNow, isCertified, serviceType } = req.query;
 
-    // Create a MongoDB query object
+
     const query = {};
     
-    // Filter by service type if specified
+
     if (serviceType) {
       query.usertype = serviceType; // Ensure this matches exactly with the database
     }
-    // Additional filters...
 
-    // Fetch the filtered data from the database
     const companies = await Company.find(query);
     
-    // Respond with the filtered companies
+
     res.json(companies);
   } catch (error) {
     console.error('Error fetching companies:', error);
