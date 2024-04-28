@@ -9,7 +9,7 @@ const GetInTouch = require('./models/GetInTouch'); // Ensure this model is creat
 const app = express();
 
 app.use(cors({
-  origin: 'http://localhost:3000'
+  origin: 'http://localhost:4000'
 }));
 
 app.use(express.json());
@@ -73,7 +73,7 @@ app.get('/api/companies', async (req, res) => {
 });
 
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 4002;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

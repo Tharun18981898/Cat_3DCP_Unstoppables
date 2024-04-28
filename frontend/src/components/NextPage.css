@@ -89,3 +89,34 @@
   .service-options input[type=checkbox] {
     margin-right: 0.5rem;
   }
+
+  .faq-button-container {
+    display: flex;
+    justify-content: flex-end; /* This will align the FAQ button to the right */
+    width: 100%; /* This makes sure the container stretches full width */
+  }
+  
+  .header-container {
+    display: flex;
+    justify-content: space-between; /* This will push the FAQ button to the right */
+    align-items: center;
+    width: 100%;
+    padding: 0 1rem; /* Add padding as needed */
+  }
+  
+  /* Your existing button styles */
+  .faq-button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .faq-button:hover {
+    background-color: #0056b3;
+  }

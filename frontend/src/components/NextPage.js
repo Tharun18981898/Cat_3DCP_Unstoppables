@@ -44,6 +44,7 @@ const NextPage = () => {
     <div className="next-page-container">
       <form onSubmit={handleSubmit} className="filter-form">
         <h1>Find Office Contractors</h1>
+      
 
         <div className="service-options">
           <label>
@@ -107,7 +108,11 @@ const NextPage = () => {
         <button type="submit" className="search-button">
           Search Contractors
         </button>
+      
       </form>
+      <button className="faq-button" onClick={() => navigate('/faq')}>
+        Frequently Asked Questions
+        </button>
     </div>
   );
 };

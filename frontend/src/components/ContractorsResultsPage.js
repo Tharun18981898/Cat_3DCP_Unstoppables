@@ -11,7 +11,7 @@ const ContractorsResultsPage = () => {
     const fetchCompanies = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch('http://localhost:3001/api/companies');
+        const response = await fetch('http://localhost:4002/api/companies');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }

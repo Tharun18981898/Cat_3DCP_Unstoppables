@@ -27,7 +27,7 @@ const SearchPage = () => {
 
   return (
     <div className="search-page">
-      <h1>Search for Structures</h1>
+      <h1>Search for Companies</h1>
       <form onSubmit={handleSubmit} className="location-search">
         <input 
           type="text"

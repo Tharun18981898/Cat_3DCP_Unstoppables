@@ -7,9 +7,9 @@ import Footer from './components/Footer';
 import Home from './components/Home';
 import SearchPage from './components/SearchPage';
 import NextPage from './components/NextPage'; 
+import FAQPage from './components/FAQPage';
 import ContractorsList from './components/ContractorsList';
 import ContractorsResultsPage from './components/ContractorsResultsPage';
-
 import BookAppointmentPage from './components/BookAppointmentPage';
 import GetEstimatePage from './components/GetEstimatePage';
 import GetInTouchPage from './components/GetInTouchPage';
@@ -27,7 +27,7 @@ function App() {
           <Route path="/contractors-list" element={<ContractorsList />} />
           <Route path="/next-page" element={<NextPage />} /> 
           <Route path="/contractors-results" element={<ContractorsResultsPage />} />
-
+          <Route path="/faq" element={<FAQPage />} />
           <Route path="/book-appointment/:companyId" element={<BookAppointmentPage />} />
           <Route path="/get-estimate/:companyId" element={<GetEstimatePage />} />
           <Route path="/get-in-touch/:companyId" element={<GetInTouchPage />} />
